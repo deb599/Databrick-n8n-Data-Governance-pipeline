@@ -17,18 +17,18 @@ Under the hood, n8n talks to the **Genie API** to start a conversation, wait for
 
 ## ⚙️ Flow Architecture
 
-| Step | Node                         | Purpose                                                                                      |
-| ---- | ---------------------------- | -------------------------------------------------------------------------------------------- |
-| 1    | **Chat Trigger**             | Captures the question typed in the n8n chat interface.                                       |
-| 2    | **Get Genie Space**          | Connects to the existing Genie “hr data analyst” space (`01f0b9da32e415fcb8b53777ebafb119`). |
-| 3    | **Start Conversation**       | Sends the chat input to Genie, initiating the analysis request.                              |
-| 4    | **Wait**                     | Pauses 15 seconds while Genie executes the underlying SQL or analysis.                       |
-| 5    | **Get Conversation Message** | Retrieves the message details and checks Genie’s status.                                     |
-| 6    | **Get Query Results**        | Once Genie is in `COMPLETED` state, downloads the structured query output.                   |
+| Step | Node                                     | Purpose                                                                                      |
+| ---- | ---------------------------------------- | -------------------------------------------------------------------------------------------- |
+| 1    | **Chat Trigger**                         | Captures the question typed in the n8n chat interface.                                       |
+| 2    | **Databrick - Get Genie Space**          | Connects to the existing Genie “hr data analyst” space (`01f0b9da32e415fcb8b53777ebafb119`). |
+| 3    | **Databrick - Start Conversation**       | Sends the chat input to Genie, initiating the analysis request.                              |
+| 4    | **Wait**                                 | Pauses 15 seconds while Genie executes the underlying SQL or analysis.                       |
+| 5    | **Databrick - Get Conversation Message** | Retrieves the message details and checks Genie’s status.                                     |
+| 6    | **Databrick - Get Query Results**        | Once Genie is in `COMPLETED` state, downloads the structured query output.                   |
 
 ---
 
-## 🧰 Pre-requisites (from Lab 1)
+## 🧰 Databrick setup
 
 1. **Create the service principal** `hr_data_analyst`
 2. **Add to the Devs group** and connect to **Serverless Compute**
@@ -47,9 +47,8 @@ These steps build the governed dataset that Genie accesses through your n8n work
 
 | Setting        | Example                                                         |
 | -------------- | --------------------------------------------------------------- |
-| Workspace Host | `https://dbc-fc870b1c-dadf.cloud.databricks.com`                |
-| Workspace ID   | `2883439424484179`                                              |
-| Genie Space ID | `01f0b9da32e415fcb8b53777ebafb119`                              |
+| Workspace Host | `Databrick host url`                |
+| Workspace ID   | `Databrick workspace id`                                              |
 | Credential     | Databricks PAT stored in n8n credentials (`Databricks account`) |
 
 ---
@@ -75,12 +74,6 @@ These steps build the governed dataset that Genie accesses through your n8n work
 * Provides a foundation for **AI Governance & Access-Controlled Queries**
 
 ---
-
-## 🚀 Next Steps
-
-* Add a `Loop Until Completed` node to poll Genie until the attachment is ready.
-* Extend the workflow with a **“Reply to Chat”** node to display the formatted results.
-* Replace Genie calls with **Model Serving endpoint invocations** for production reliability.
 
 ---
 
