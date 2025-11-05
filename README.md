@@ -76,7 +76,7 @@ These steps build the governed dataset that Genie accesses through your n8n work
 
 ---
 
-## 🧠 Additional: Governed HR Analytics Agent (Databricks)
+## 🧠 Additional: HR Analytics Agent (Databricks)
 
 * Accesses data only via governed UC functions (analyze_performance(), analyze_operations()).
 * Enforces anonymization, masking, and row-level filters automatically.
