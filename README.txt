@@ -1,6 +1,7 @@
 # 🧩 Databricks Genie Query Automation — Lab 1 Integration (Governance Foundation)
 
-This n8n workflow integrates directly with **Databricks Genie** to automate conversational queries against the `clientcare.hr_data` catalog objects created in **Lab 1: Building the Governance Foundation**.
+This n8n workflow integrates with Databricks Genie to automate conversational queries against the clientcare.hr_data catalog objects created in Databricks.
+It uses the community node n8n-nodes-databricks for seamless API connectivity.
 
 ---
 
