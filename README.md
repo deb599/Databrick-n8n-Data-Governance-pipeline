@@ -9,8 +9,8 @@ It uses the community node n8n-nodes-databricks for seamless API connectivity.
 
 The flow lets you ask natural-language questions about the HR data you provisioned in Databricks — for example:
 
-> “What is the highest performing department?”
-> “Show me the average salary by hire year.”
+* “What is the highest performing department?”
+* “Show me the average salary by hire year.”
 
 Under the hood, n8n talks to the **Genie API** to start a conversation, wait for completion, and then fetch the query results.
 
@@ -21,7 +21,7 @@ Under the hood, n8n talks to the **Genie API** to start a conversation, wait for
 | Step | Node                                     | Purpose                                                                                      |
 | ---- | ---------------------------------------- | -------------------------------------------------------------------------------------------- |
 | 1    | **Chat Trigger**                         | Captures the question typed in the n8n chat interface.                                       |
-| 2    | **Databrick - Get Genie Space**          | Connects to the existing Genie “hr data analyst” space (`01f0b9da32e415fcb8b53777ebafb119`). |
+| 2    | **Databrick - Get Genie Space**          | Connects to the existing Genie “hr data analyst” space.                                      |
 | 3    | **Databrick - Start Conversation**       | Sends the chat input to Genie, initiating the analysis request.                              |
 | 4    | **Wait**                                 | Pauses 15 seconds while Genie executes the underlying SQL or analysis.                       |
 | 5    | **Databrick - Get Conversation Message** | Retrieves the message details and checks Genie’s status.                                     |
@@ -34,7 +34,7 @@ Under the hood, n8n talks to the **Genie API** to start a conversation, wait for
 1. **Create the service principal** `hr_data_analyst`
 2. **Add to the Devs group** and connect to **Serverless Compute**
 3. **Create HR tables** under `clientcare.hr_data`
-4. **Tag and classify data** (PII, Confidential, etc.)
+4. **Tag and classify tables** (PII, Confidential, Restricted etc.)
 5. **Create a filtered analyst view** → `clientcare.hr_data.data_analyst_view`
 6. **Grant permissions** to the Devs group for the view
 7. **Implement column masking** for sensitive fields (e.g. SSN)
@@ -75,6 +75,15 @@ These steps build the governed dataset that Genie accesses through your n8n work
 * Provides a foundation for **AI Governance & Access-Controlled Queries**
 
 ---
+
+## 🧠 Additional: Governed HR Analytics Agent (Databricks)
+
+* Accesses data only via governed UC functions (analyze_performance(), analyze_operations()).
+* Enforces anonymization, masking, and row-level filters automatically.
+* Uses MLflow ResponsesAgent with the OpenAI client for conversational analytics.
+* All executions are logged in MLflow for audit and evaluation.
+
+Result: A lightweight AI agent built with the Mosaic AI Agent Framework to run secure, natural-language queries on HR data through Unity Catalog functions.
 
 ---
 
