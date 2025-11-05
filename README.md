@@ -1,89 +1,81 @@
-# 🧩 Databricks Genie Query Automation via n8n — Governance Foundation
 
-This n8n workflow integrates with Databricks Genie to automate conversational queries against the clientcare.hr_data catalog objects created in Databricks.
-It uses the community node n8n-nodes-databricks for seamless API connectivity.
+---
+
+# 🧩 Databricks Custom Agent Query Automation via n8n — Secure HR Analytics
+
+This n8n workflow connects **directly to a custom Databricks Agent endpoint** to automate conversational queries against the governed HR dataset in Databricks — without using Genie.
+All queries are executed through Databricks’ **Mosaic AI Agent Framework** and **Unity Catalog controls**, ensuring privacy, masking, and audit logging are always enforced.
 
 ---
 
 ## 🧠 Overview
 
-The flow lets you ask natural-language questions about the HR data you provisioned in Databricks — for example:
+Ask questions in plain English — the Databricks Agent converts them into secure, policy-compliant analytics queries.
 
-* “What is the highest performing department?”
-* “Show me the average salary by hire year.”
+Examples:
 
-Under the hood, n8n talks to the **Genie API** to start a conversation, wait for completion, and then fetch the query results.
+* “Which department shows the highest retention?”
+* “What’s the average salary by hire year?”
+
+Every query runs within the Databricks security boundary, using your Unity Catalog governance setup.
 
 ---
 
 ## ⚙️ Flow Architecture
 
-| Step | Node                                     | Purpose                                                                                      |
-| ---- | ---------------------------------------- | -------------------------------------------------------------------------------------------- |
-| 1    | **Chat Trigger**                         | Captures the question typed in the n8n chat interface.                                       |
-| 2    | **Databrick - Get Genie Space**          | Connects to the existing Genie “hr data analyst” space.                                      |
-| 3    | **Databrick - Start Conversation**       | Sends the chat input to Genie, initiating the analysis request.                              |
-| 4    | **Wait**                                 | Pauses 15 seconds while Genie executes the underlying SQL or analysis.                       |
-| 5    | **Databrick - Get Conversation Message** | Retrieves the message details and checks Genie’s status.                                     |
-| 6    | **Databrick - Get Query Results**        | Once Genie is in `COMPLETED` state, downloads the structured query output.                   |
+| Step | Node                                      | Purpose                                                    |
+| ---- | ----------------------------------------- | ---------------------------------------------------------- |
+| 1    | **Chat Trigger**                          | Captures the user question from the n8n chat interface.    |
+| 2    | **HTTP Request – Query Databricks Agent** | Sends the query directly to the Databricks Agent endpoint. |
+| 3    | **(Optional) Respond to Chat**            | Returns the agent’s answer back into n8n’s chat UI.        |
+
+This setup replaces Genie’s conversational flow with a **direct, authenticated model-serving call** to Databricks.
 
 ---
 
-## 🧰 Databrick setup
+## 🧰 Databricks Setup
 
-1. **Create the service principal** `hr_data_analyst`
-2. **Add to the Devs group** and connect to **Serverless Compute**
-3. **Create HR tables** under `clientcare.hr_data`
-4. **Tag and classify tables** (PII, Confidential, Restricted etc.)
-5. **Create a filtered analyst view** → `clientcare.hr_data.data_analyst_view`
-6. **Grant permissions** to the Devs group for the view
-7. **Implement column masking** for sensitive fields (e.g. SSN)
-8. **Deploy helper functions** for table queries
+1. **Deploy the custom agent** (e.g., `hr_analytics_agent`) in Databricks Mosaic AI.
+2. **Use Unity Catalog functions** for secure data access (`analyze_performance()`, `analyze_operations()`).
+3. **Apply governance controls**: data classification tags, row-level filters, and column masking for PII.
+4. **Grant access** only to approved service principals or groups (e.g., `hr_data_analyst`, `Devs`).
+5. **Enable MLflow logging** for traceability and compliance review.
 
-These steps build the governed dataset that Genie accesses through your n8n workflow.
+These measures ensure all n8n queries respect Databricks’ data-governance policies automatically.
 
 ---
 
 ## 🔗 Databricks Connection Details
 
-| Setting        | Example                                                         |
-| -------------- | --------------------------------------------------------------- |
-| Workspace Host | `Databrick host url`                |
-| Workspace ID   | `Databrick workspace id`                                              |
-| Credential     | Databricks PAT stored in n8n credentials (`Databricks account`) |
+| Setting    | Example                                                                                    |
+| ---------- | ------------------------------------------------------------------------------------------ |
+| Endpoint   | `https://<your-workspace>.cloud.databricks.com/serving-endpoints/<your-agent>/invocations` |
+| Auth Type  | Databricks Personal Access Token (stored securely in n8n)                                  |
+| Credential | `Databricks account` (n8n credential entry)                                                |
 
 ---
 
-## 💬 Sample Query Flow
+## 💬 Example Query Flow
 
-1. In the n8n Chat UI, type:
+1. In n8n Chat, type:
 
    ```
-   What is the highest performing department?
+   Which is the best performing department?
    ```
-2. Genie executes a secure SQL query over `clientcare.hr_data.data_analyst_view`
-3. Results are anonymized per masking rules
-4. Output returned in n8n’s result pane or used by downstream nodes
+2. The HTTP Request node calls your Databricks Agent endpoint.
+3. The agent executes a governed query over `clientcare.hr_data.data_analyst_view`.
+4. Results follow masking and filter policies defined in Unity Catalog.
+5. The answer is returned to n8n for display or further automation.
 
 ---
 
 ## 🧩 Key Features
 
-* Seamless integration between **n8n’s chat interface** and **Databricks Genie**
-* Supports **governed, masked data** in Unity Catalog
-* Reusable for other **AI-assisted analytics** spaces
-* Provides a foundation for **AI Governance & Access-Controlled Queries**
-
----
-
-## 🧠 Additional: HR Analytics Agent (Databricks)
-
-* Accesses data only via governed UC functions (analyze_performance(), analyze_operations()).
-* Enforces anonymization, masking, and row-level filters automatically.
-* Uses MLflow ResponsesAgent with the OpenAI client for conversational analytics.
-* All executions are logged in MLflow for audit and evaluation.
-
-Result: A lightweight AI agent built with the Mosaic AI Agent Framework to run secure, natural-language queries on HR data through Unity Catalog functions.
+* 🔒 **Direct integration** with Databricks custom agent (no Genie dependency)
+* 🧠 **Governed analytics** via Unity Catalog functions
+* 🧾 **Full auditability** through MLflow tracking
+* ⚙️ **Reusable architecture** for any Databricks-hosted agent endpoint
+* 🌐 **Secure orchestration** using n8n’s credential manager and chat interface
 
 ---
 
