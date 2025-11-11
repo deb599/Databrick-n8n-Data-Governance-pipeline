@@ -27,7 +27,7 @@ Every query runs within the Databricks security boundary, using your Unity Catal
 | ---- | ----------------------------------------- | ---------------------------------------------------------- |
 | 1    | **Chat Trigger**                          | Captures the user question from the n8n chat interface.    |
 | 2    | **HTTP Request – Query Databricks Agent** | Sends the query directly to the Databricks Agent endpoint. |
-| 3    | **(Optional) Respond to Chat**            | Returns the agent’s answer back into n8n’s chat UI.        |
+| 3    | **Respond to Chat**            | Returns the agent’s answer back into n8n’s chat UI.        |
 
 This setup replaces Genie’s conversational flow with a **direct, authenticated model-serving call** to Databricks.
 
