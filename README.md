@@ -60,7 +60,7 @@ These measures ensure all n8n queries respect Databricks’ data-governance poli
 1. In n8n Chat, type:
 
    ```
-   Which is the best performing department?
+   What is this year's best performing department?
    ```
 2. The HTTP Request node calls your Databricks Agent endpoint.
 3. The agent executes a governed query over `clientcare.hr_data.data_analyst_view`.
